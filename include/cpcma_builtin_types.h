@@ -8,5 +8,6 @@ typedef long long cpcma____int64;
  * Returns zero if prime and non-zero if not prime
  */
 int cpcma_check_prime(cpcma____uint64 x);
+int cpcma_probably_prime(cpcma____uint64 x);
 #endif
 #endif
