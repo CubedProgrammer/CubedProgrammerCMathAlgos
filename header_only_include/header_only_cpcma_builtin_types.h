@@ -2,6 +2,7 @@
 #ifndef Included_header_only_cpcma_builtin_types_h
 #define Included_header_only_cpcma_builtin_types_h
 #include<math.h>
+#include<string.h>
 #include<cpcma_builtin_types.h>
 // number of primes under one thousand
 #define CPCMA____NPUOT 168
@@ -26,6 +27,73 @@ static int cpcma____putot[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37,
 		751, 757, 761, 769, 773, 787, 797, 809, 811, 821, 823, 827, 829,
 		839, 853, 857, 859, 863, 877, 881, 883, 887, 907, 911, 919, 929,
 		937, 941, 947, 953, 967, 971, 977, 983, 991, 997};
+
+/**
+ * Finds all primes up to a number, note size is one less than the actual size of buf
+ * Specifically, sieves the array buf, so that only prime indices are non-zero
+ */
+void cpcma_sieve_eratosthenes(size_t size,char buf[])
+{
+	// set everything to be prime at first
+	memset(buf, 1, size);
+	for(size_t i = 2; i <= size; ++i)
+	{
+		if(buf[i])
+		{
+			// set multiples to be composite
+			for(size_t j = i * 2; j <= size; j += i)
+				buf[j] = 0;
+		}
+	}
+	// explicitly set 0 and 1 to be not prime
+	buf[0] = 0;
+	buf[1] = 0;
+}
+
+/**
+ * Correct modular arithmetic for ints
+ */
+int cpcma_correct_mod(int x, int y)
+{
+	int n = x % y + y;
+	return n % y;
+}
+
+/**
+ * Correct modular arithmetic for longs
+ */
+long cpcma_correct_modl(long x, long y)
+{
+	long n = x % y + y;
+	return n % y;
+}
+
+/**
+ * Correct modular arithmetic for ints
+ */
+long long cpcma_correct_modll(long long x, long long y)
+{
+	long long n = x % y + y;
+	return n % y;
+}
+
+/**
+ * Modular exponentiation
+ */
+int cpcma_mod_pow(int base, int exp, int mod)
+{
+	long long x = 1;
+	long long cache[35];
+	cache[0] = base;
+	for(int i = 1; i < 35; ++i)
+		cache[i] = cpcma_correct_modll(cache[i - 1] * cache[i - 1], mod);
+	for(int i = 0; i < 31; ++i)
+	{
+		if((exp >> i) % 2)
+			x = cpcma_correct_modll(x * cache[i], mod);
+	}
+	return x;
+}
 
 /**
  * Faster algorithm for checking if a number is prime
