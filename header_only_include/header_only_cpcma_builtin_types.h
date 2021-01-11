@@ -96,6 +96,32 @@ int cpcma_mod_pow(int base, int exp, int mod)
 }
 
 /**
+ * Modular exponentiation with long exponent
+ */
+int cpcma_mod_pow_long_exp(int base, long exp, int mod)
+{
+	return cpcma_mod_pow_llong_exp(base, exp, mod);
+}
+
+/**
+ * Modular exponentiation with long long exponent
+ */
+int cpcma_mod_pow_llong_exp(int base, long long exp, int mod)
+{
+	long long x = 1;
+	long long cache[70];
+	cache[0] = base;
+	for(int i = 1; i < 70; ++i)
+		cache[i] = cpcma_correct_modll(cache[i - 1] * cache[i - 1], mod);
+	for(int i = 0; i < 63; ++i)
+	{
+		if((exp >> i) % 2)
+			x = cpcma_correct_modll(x * cache[i], mod);
+	}
+	return x;
+}
+
+/**
  * Faster algorithm for checking if a number is prime
  * Works for numbers less than 10 to the 19
  */

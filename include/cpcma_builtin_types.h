@@ -35,6 +35,16 @@ long long cpcma_correct_modll(long long x, long long y);
  * Modular exponentiation
  */
 int cpcma_mod_pow(int base, int exp, int mod);
+
+/**
+ * Modular exponentiation with long exponent
+ */
+int cpcma_mod_pow_long_exp(int base, long exp, int mod);
+
+/**
+ * Modular exponentiation with long long exponent
+ */
+int cpcma_mod_pow_llong_exp(int base, long long exp, int mod);
 int cpcma_probably_prime(cpcma____uint64 x);
 #endif
 #endif
