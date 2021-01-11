@@ -104,6 +104,72 @@ int cpcma_mod_pow_long_exp(int base, long exp, int mod)
 }
 
 /**
+ * Greatest common divisor for ints
+ */
+int cpcma_gcd_int32(int x, int y)
+{
+	int r = x;
+	while(y > 0)
+	{
+		r = x % y;
+		x = y;
+		y = r;
+	}
+	return x;
+}
+
+/**
+ * Greatest common divisor for 64-bit ints
+ */
+cpcma____int64 cpcma_gcd_int64(cpcma____int64 x, cpcma____int64 y)
+{
+	cpcma____int64 r = x;
+	while(y > 0)
+	{
+		r = x % y;
+		x = y;
+		y = r;
+	}
+	return x;
+}
+
+/**
+ * Factors a number and stores them in an array pointed to by factorp, numfac points to the size
+ */
+void cpcma_factor_uint64(cpcma____uint64 x, cpcma____uint64 *factorp[], size_t *numfac)
+{
+	// figure out number of factors
+	cpcma____uint64 y = sqrt(x);
+	*numfac = 0;
+	for(cpcma____uint64 i = 1; i <= y; ++i)
+	{
+		if(x % i == 0)
+			*numfac += i * i == x ? 1 : 2;
+	}
+
+	// write all the factors
+	*factorp = malloc(*numfac * sizeof(cpcma____uint64));
+	size_t size = 0;
+	for(cpcma____uint64 i = 1; i <= y; ++i)
+	{
+		if(x % i == 0)
+		{
+			if(i * i == x)
+			{
+				(*factorp)[size] = i;
+				size++;
+			}
+			else
+			{
+				(*factorp)[size] = i;
+				(*factorp)[size + 1] = x / i;
+				size += 2;
+			}
+		}
+	}
+}
+
+/**
  * Modular exponentiation with long long exponent
  */
 int cpcma_mod_pow_llong_exp(int base, long long exp, int mod)
@@ -186,6 +252,7 @@ int cpcma_probably_prime(cpcma____uint64 x)
 		return fact;
 	}
 }
+
 /**
  * Uses trial division with 6n+-1 optimization
  * Returns zero if prime and non-zero if not prime

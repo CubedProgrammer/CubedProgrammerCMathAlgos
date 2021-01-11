@@ -29,7 +29,7 @@ long cpcma_correct_modl(long x, long y);
 /**
  * Correct modular arithmetic for ints
  */
-long long cpcma_correct_modll(long long x, long long y);
+cpcma____int64 cpcma_correct_modll(cpcma____int64 x, cpcma____int64 y);
 
 /**
  * Modular exponentiation
@@ -42,9 +42,24 @@ int cpcma_mod_pow(int base, int exp, int mod);
 int cpcma_mod_pow_long_exp(int base, long exp, int mod);
 
 /**
- * Modular exponentiation with long long exponent
+ * Modular exponentiation with cpcma____int64 exponent
  */
-int cpcma_mod_pow_llong_exp(int base, long long exp, int mod);
+int cpcma_mod_pow_llong_exp(int base, cpcma____int64 exp, int mod);
+
+/**
+ * Greatest common divisor for ints
+ */
+int cpcma_gcd_int32(int x, int y);
+
+/**
+ * Greatest common divisor for 64-bit ints
+ */
+cpcma____int64 cpcma_gcd_int64(cpcma____int64 x, cpcma____int64 y);
+
+/**
+ * Factors a number and stores them in an array pointed to by factorp, numfac points to the size
+ */
+void cpcma_factor_uint64(cpcma____uint64 x, cpcma____uint64 *factorp[], size_t *numfac);
 int cpcma_probably_prime(cpcma____uint64 x);
 #endif
 #endif
