@@ -2,6 +2,7 @@
 #ifndef Included_header_only_cpcma_builtin_types_h
 #define Included_header_only_cpcma_builtin_types_h
 #include<math.h>
+#include<stdlib.h>
 #include<string.h>
 #include<cpcma_builtin_types.h>
 // number of primes under one thousand
@@ -134,6 +135,22 @@ cpcma____int64 cpcma_gcd_int64(cpcma____int64 x, cpcma____int64 y)
 }
 
 /**
+ * Least common multiple for ints
+ */
+int cpcma_lcm_int32(int x, int y)
+{
+	return x * y / cpcma_gcd_int32(x, y);
+}
+
+/**
+ * Least common multiple for 64-bit ints
+ */
+cpcma____int64 cpcma_lcm_int64(cpcma____int64 x, cpcma____int64 y)
+{
+	return x * y / cpcma_gcd_int64(x, y);
+}
+
+/**
  * Factors a number and stores them in an array pointed to by factorp, numfac points to the size
  */
 void cpcma_factor_uint64(cpcma____uint64 x, cpcma____uint64 *factorp[], size_t *numfac)
@@ -188,8 +205,40 @@ int cpcma_mod_pow_llong_exp(int base, long long exp, int mod)
 }
 
 /**
+ * 64-bit modular exponentiation
+ */
+cpcma____int64 cpcma_mod_pow64(cpcma____int64 base, cpcma____int64 exp, cpcma____int64 mod)
+{
+	base = (base % mod + mod) % mod;
+	return cpcma_mod_pow64u(base, exp, mod);
+}
+
+/**
+ * 64-bit unsigned modular exponentiation
+ */
+cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcma____uint64 mod)
+{
+	// cache for mod pows
+	cpcma____uint64 cache[65];
+	base %= mod;
+	cache[0] = base;
+	// most significant and least significant nine digits, and the 2xy in the binomial expansion
+	cpcma____uint64 msds, lsds, mid;
+	for(int i = 1; i < sizeof(cpcma____uint64) * 8; ++i)
+	{
+		msds = cache[i - 1] / 1000000000;
+		lsds = cache[i - 1] % 1000000000;
+		mid = msds * lsds << 1;
+		lsds *= lsds;
+		msds *= msds;
+		lsds += mid % 1000000000 * 1000000000;
+		msds += mid / 1000000000;
+	}
+}
+
+/**
  * Faster algorithm for checking if a number is prime
- * Works for numbers less than 10 to the 19
+ * Works for numbers less than 10 to the 18
  */
 int cpcma_probably_prime(cpcma____uint64 x)
 {
@@ -250,6 +299,24 @@ int cpcma_probably_prime(cpcma____uint64 x)
 			}
 		}
 		return fact;
+	}
+}
+
+cpcma____uint64 cpcma_get_fib(int x)
+{
+	if(x == 1 || x == 2)
+		return 1;
+	else
+	{
+		cpcma____uint64 m = 1, n = 1, o = 2;
+		while(x > 3)
+		{
+			m = n;
+			n = o;
+			o = m + n;
+			--x;
+		}
+		return o;
 	}
 }
 

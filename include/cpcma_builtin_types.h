@@ -47,6 +47,26 @@ int cpcma_mod_pow_long_exp(int base, long exp, int mod);
 int cpcma_mod_pow_llong_exp(int base, cpcma____int64 exp, int mod);
 
 /**
+ * 64-bit modular exponentiation
+ */
+cpcma____int64 cpcma_mod_pow64(cpcma____int64 base, cpcma____int64 exp, cpcma____int64 mod);
+
+/**
+ * 64-bit unsigned modular exponentiation
+ */
+cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcma____uint64 mod);
+
+/**
+ * Least common multiple for ints
+ */
+int cpcma_lcm_int32(int x, int y);
+
+/**
+ * Least common multiple for 64-bit ints
+ */
+cpcma____int64 cpcma_lcm_int64(cpcma____int64 x, cpcma____int64 y);
+
+/**
  * Greatest common divisor for ints
  */
 int cpcma_gcd_int32(int x, int y);
@@ -60,6 +80,7 @@ cpcma____int64 cpcma_gcd_int64(cpcma____int64 x, cpcma____int64 y);
  * Factors a number and stores them in an array pointed to by factorp, numfac points to the size
  */
 void cpcma_factor_uint64(cpcma____uint64 x, cpcma____uint64 *factorp[], size_t *numfac);
+cpcma____uint64 cpcma_get_fib(int x);
 int cpcma_probably_prime(cpcma____uint64 x);
 #endif
 #endif
