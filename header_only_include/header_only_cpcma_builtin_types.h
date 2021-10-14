@@ -2,6 +2,7 @@
 #ifndef Included_header_only_cpcma_builtin_types_h
 #define Included_header_only_cpcma_builtin_types_h
 #include<math.h>
+#include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
 #include<cpcma_builtin_types.h>
@@ -215,15 +216,18 @@ cpcma____int64 cpcma_mod_pow64(cpcma____int64 base, cpcma____int64 exp, cpcma___
 
 /**
  * 64-bit unsigned modular exponentiation
+ * For numbers up to 18 digits
  */
 cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcma____uint64 mod)
 {
-	// cache for mod pows
+	// caches for mod pows
 	cpcma____uint64 cache[65];
 	base %= mod;
 	cache[0] = base;
-	// most significant and least significant nine digits, and the 2xy in the binomial expansion
+	// most significant and least significant eighteen digits, and the 2xy in the binomial expansion
 	cpcma____uint64 msds, lsds, mid;
+	// the amount of times the dividend can be divided by 10 during long division
+	int digs;
 	for(int i = 1; i < sizeof(cpcma____uint64) * 8; ++i)
 	{
 		msds = cache[i - 1] / 1000000000;
@@ -233,7 +237,62 @@ cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcm
 		msds *= msds;
 		lsds += mid % 1000000000 * 1000000000;
 		msds += mid / 1000000000;
+		if(lsds > 999999999999999999)
+		{
+			lsds -= 1000000000000000000;
+			++msds;
+		}
+		//printf("%llu %llu\n", msds, lsds);
+		// perform long division
+		digs = 18;
+		while(digs > 0)
+		{
+			while(digs > 0 && msds < mod)
+			{
+				msds *= 10;
+				msds += lsds / 100000000000000000;
+				lsds %= 100000000000000000;
+				lsds *= 10;
+				--digs;
+			}
+			msds %= mod;
+		}
+		cache[i] = msds;
+		//printf("%llu\n", msds);
 	}
+	cpcma____uint64 res = 1;
+	for(int i = 0; i < sizeof(cpcma____uint64) * 8; ++i)
+	{
+		if((exp >> i & 1) == 1)
+		{
+			lsds = res % 1000000000 * (cache[i] % 1000000000);
+			msds = res / 1000000000 * (cache[i] / 1000000000);
+			mid = res % 1000000000 * (cache[i] / 1000000000) + res / 1000000000 * (cache[i] % 1000000000);
+			lsds += mid % 1000000000 * 1000000000;
+			msds += mid / 1000000000;
+			if(lsds > 999999999999999999)
+			{
+				lsds -= 1000000000000000000;
+				++msds;
+			}
+			// perform long division
+			digs = 18;
+			while(digs > 0)
+			{
+				while(digs > 0 && msds < mod)
+				{
+					msds *= 10;
+					msds += lsds / 100000000000000000;
+					lsds %= 100000000000000000;
+					lsds *= 10;
+					--digs;
+				}
+				msds %= mod;
+			}
+			res = msds;
+		}
+	}
+	return res;
 }
 
 /**
@@ -265,38 +324,8 @@ int cpcma_probably_prime(cpcma____uint64 x)
 		// switch algorithms
 		if(fact == 0 && 997 * 997 < x)
 		{
-			// stores the most significant 19 digits
-			// and the least significant 19 digits
-			cpcma____uint64 msig19d = 0, lsig19d = CPCMA____PCB;
-			// cache for modular exponentiation
-			cpcma____uint64 cache[CPCMA____MEP];
-			cache[0] = lsig19d;
-			// the most significant digit
-			cpcma____uint64 msd;
-			// compute the base raised to powers of two
-			// and cache them
-			cpcma____uint64 pow = 1, ind = 0;
-			cpcma____uint64 tmp;
-			while(pow && pow < x)
-			{
-				lsig19d = cache[ind] % 1000000000;
-				msig19d = cache[ind] / 1000000000 % 1000000000;
-				msd = cache[ind] / 1000000000000000000ull % 10;
-				tmp = 2 * lsig19d * msig19d;
-				lsig19d *= lsig19d;
-				msig19d *= msig19d;
-				lsig19d += tmp % 1000000000 * 1000000000;
-				msig19d += tmp / 1000000000;
-				tmp = (cache[ind] % 1000000000) * msd * 2;
-				msig19d += tmp;
-				tmp = (cache[ind] / 1000000000 % 1000000000) * msd * 2;
-				msig19d += tmp % 1000000000 * 1000000000;
-				msd *= msd;
-				msd += tmp / 1000000000 % 100;
-				// double the power, exponent is increased by one
-				// using exponent laws
-				pow *= 2;
-			}
+			if(cpcma_mod_pow64u(CPCMA____PCB, x - 1, x) != 1)
+				fact = 1;
 		}
 		return fact;
 	}
