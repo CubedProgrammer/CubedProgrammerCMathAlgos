@@ -9,9 +9,6 @@
 // number of primes under one thousand
 #define CPCMA____NPUOT 168
 
-// prime checking base
-#define CPCMA____PCB 3
-
 // maximum exponent of prime number
 #define CPCMA____MEP 70
 
@@ -230,13 +227,17 @@ cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcm
 	int digs;
 	for(int i = 1; i < sizeof(cpcma____uint64) * 8; ++i)
 	{
+		// split into nine-digit parts
 		msds = cache[i - 1] / 1000000000;
 		lsds = cache[i - 1] % 1000000000;
+		// 2xy of the binomial expansion
 		mid = msds * lsds << 1;
+		// square the number
 		lsds *= lsds;
 		msds *= msds;
 		lsds += mid % 1000000000 * 1000000000;
 		msds += mid / 1000000000;
+		// check overflow
 		if(lsds > 999999999999999999)
 		{
 			lsds -= 1000000000000000000;
@@ -247,6 +248,7 @@ cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcm
 		digs = 18;
 		while(digs > 0)
 		{
+			// multiply by 10 until at least mod
 			while(digs > 0 && msds < mod)
 			{
 				msds *= 10;
@@ -255,6 +257,7 @@ cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcm
 				lsds *= 10;
 				--digs;
 			}
+			// perform modular arithmetic
 			msds %= mod;
 		}
 		cache[i] = msds;
@@ -265,11 +268,16 @@ cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcm
 	{
 		if((exp >> i & 1) == 1)
 		{
+			// break res and cache into binomials and multiply
+			// last
 			lsds = res % 1000000000 * (cache[i] % 1000000000);
+			// first
 			msds = res / 1000000000 * (cache[i] / 1000000000);
+			// inner + outer
 			mid = res % 1000000000 * (cache[i] / 1000000000) + res / 1000000000 * (cache[i] % 1000000000);
 			lsds += mid % 1000000000 * 1000000000;
 			msds += mid / 1000000000;
+			// check for overflow
 			if(lsds > 999999999999999999)
 			{
 				lsds -= 1000000000000000000;
@@ -279,6 +287,7 @@ cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcm
 			digs = 18;
 			while(digs > 0)
 			{
+				// multiply by 10 until at least mod
 				while(digs > 0 && msds < mod)
 				{
 					msds *= 10;
@@ -287,6 +296,7 @@ cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcm
 					lsds *= 10;
 					--digs;
 				}
+				// perform modular arithmetic
 				msds %= mod;
 			}
 			res = msds;
@@ -297,9 +307,10 @@ cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcm
 
 /**
  * Faster algorithm for checking if a number is prime
+ * Custom base for Fermat's little theorem
  * Works for numbers less than 10 to the 18
  */
-int cpcma_probably_prime(cpcma____uint64 x)
+int cpcma_probably_prime_base(cpcma____uint64 x, cpcma____uint64 base)
 {
 	// get rid of the obvious cases
 	if(x == 2 || x == 3)
@@ -324,13 +335,16 @@ int cpcma_probably_prime(cpcma____uint64 x)
 		// switch algorithms
 		if(fact == 0 && 997 * 997 < x)
 		{
-			if(cpcma_mod_pow64u(CPCMA____PCB, x - 1, x) != 1)
+			if(cpcma_mod_pow64u(base, x - 1, x) != 1)
 				fact = 1;
 		}
 		return fact;
 	}
 }
 
+/**
+ * Gets the xth fibonacci number
+ */
 cpcma____uint64 cpcma_get_fib(int x)
 {
 	if(x == 1 || x == 2)

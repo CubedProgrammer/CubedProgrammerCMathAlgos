@@ -1,6 +1,10 @@
 #ifndef __cplusplus
 #ifndef Included_cpcma_builtin_types_h
 #define Included_cpcma_builtin_types_h
+
+// prime checking base
+#define CPCMA____PCB 3
+
 typedef long long unsigned cpcma____uint64;
 typedef long long cpcma____int64;
 
@@ -80,7 +84,27 @@ cpcma____int64 cpcma_gcd_int64(cpcma____int64 x, cpcma____int64 y);
  * Factors a number and stores them in an array pointed to by factorp, numfac points to the size
  */
 void cpcma_factor_uint64(cpcma____uint64 x, cpcma____uint64 *factorp[], size_t *numfac);
+
+/**
+ * Gets the xth fibonacci number
+ */
 cpcma____uint64 cpcma_get_fib(int x);
-int cpcma_probably_prime(cpcma____uint64 x);
+
+/**
+ * Faster algorithm for checking if a number is prime
+ * Custom base for Fermat's little theorem
+ * Works for numbers less than 10 to the 18
+ */
+int cpcma_probably_prime_base(cpcma____uint64 x, cpcma____uint64 base);
+
+/**
+ * Faster algorithm for checking if a number is prime
+ * Works for numbers less than 10 to the 18
+ */
+static inline int cpcma_probably_prime(cpcma____uint64 x)
+{
+	return cpcma_probably_prime_base(x, CPCMA____PCB);
+}
+
 #endif
 #endif
