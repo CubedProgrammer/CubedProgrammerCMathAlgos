@@ -1,6 +1,7 @@
 #ifndef __cplusplus
 #ifndef Included_cpcma_builtin_types_h
 #define Included_cpcma_builtin_types_h
+#include<math.h>
 
 // prime checking base
 #define CPCMA____PCB 3
@@ -13,6 +14,21 @@ typedef long long cpcma____int64;
  * Specifically, sieves the array buf, so that only prime indices are non-zerp
  */
 void cpcma_sieve_eratosthenes(size_t size,char buf[]);
+
+/**
+ * Finds a number x such that pow(x, x) == num
+ * For values between 0 and 1, returns the greater of the two
+ */
+double cpcma_inv_power_tower(double num);
+
+/**
+ * num raised to the power of num
+ * Zero to the zero is one in this case
+ */
+static inline double cpcma_power_tower(double num)
+{
+	return pow(num, num);
+}
 
 /**
  * Uses trial division with 6n+-1 optimization

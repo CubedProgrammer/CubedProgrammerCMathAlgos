@@ -1,7 +1,6 @@
 #ifndef __cplusplus
 #ifndef Included_header_only_cpcma_builtin_types_h
 #define Included_header_only_cpcma_builtin_types_h
-#include<math.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -47,6 +46,27 @@ void cpcma_sieve_eratosthenes(size_t size,char buf[])
 	// explicitly set 0 and 1 to be not prime
 	buf[0] = 0;
 	buf[1] = 0;
+}
+
+/**
+ * Finds a number x such that pow(x, x) == num
+ * For values between 0 and 1, returns the greater of the two
+ */
+double cpcma_inv_power_tower(double num)
+{
+	if(num < exp(-1))
+		return NAN;
+	else
+	{
+		double guess = num * log(num) + 2;
+		double check = pow(guess, guess) - num;
+		while(check >= 0.000000000001)
+		{
+			guess -= (1 - num / (check + num)) / (1 + log(guess));
+			check = pow(guess, guess) - num;
+		}
+		return guess;
+	}
 }
 
 /**
