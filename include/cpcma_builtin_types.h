@@ -5,6 +5,10 @@
 
 // prime checking base
 #define CPCMA____PCB 3
+#define cpcma_coversinf(n)cpcma_versinf(1.57079632f-(n))
+#define cpcma_covercosf(n)cpcma_vercosf(1.57079632f-(n))
+#define cpcma_coversin(n)cpcma_versin(1.5707963267948966-(n))
+#define cpcma_covercos(n)cpcma_vercos(1.5707963267948966-(n))
 
 typedef long long unsigned cpcma____uint64;
 typedef long long cpcma____int64;
@@ -107,6 +111,36 @@ void cpcma_factor_uint64(cpcma____uint64 x, cpcma____uint64 *factorp[], size_t *
 cpcma____uint64 cpcma_get_fib(int x);
 
 /**
+ * Versin, which is 1-cos
+ */
+static inline float cpcma_versinf(float f)
+{
+	float s = sinf(f * 0.5);
+	return s * s * 2;
+}
+
+static inline double cpcma_versin(double d)
+{
+	double s = sin(d * 0.5);
+	return s * s * 2;
+}
+
+/**
+ * Vercos, which is 1+cos
+ */
+static inline float cpcma_vercosf(float f)
+{
+	float s = cosf(f * 0.5);
+	return s * s * 2;
+}
+
+static inline double cpcma_vercos(double d)
+{
+	double s = cos(d * 0.5);
+	return s * s * 2;
+}
+
+/**
  * Faster algorithm for checking if a number is prime
  * Custom base for Fermat's little theorem
  * Works for numbers less than 10 to the 18
@@ -116,6 +150,7 @@ int cpcma_probably_prime_base(cpcma____uint64 x, cpcma____uint64 base);
 /**
  * Faster algorithm for checking if a number is prime
  * Works for numbers less than 10 to the 18
+ * Less than one in one billion chance a composite passes the test
  */
 static inline int cpcma_probably_prime(cpcma____uint64 x)
 {
