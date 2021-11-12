@@ -177,6 +177,13 @@ static inline double cpcma_vercos(double d)
 }
 
 /**
+ * Probabilistic prime checking algorithm
+ * Returns zero if x is strong-pseudoprime or prime
+ * Works for numbers less than 10 to the 18
+ */
+int cpcma_strong_pseudoprime_base(cpcma____uint64 x, cpcma____uint64 base);
+
+/**
  * Faster algorithm for checking if a number is prime
  * Custom base for Fermat's little theorem
  * Works for numbers less than 10 to the 18

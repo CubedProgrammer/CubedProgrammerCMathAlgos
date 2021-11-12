@@ -384,6 +384,28 @@ int cpcma_normalize(double *restrict x, double *restrict y, double *restrict z)
 }
 
 /**
+ * Probabilistic prime checking algorithm
+ * Returns zero if x is strong-pseudoprime or prime
+ * Works for numbers less than 10 to the 18
+ */
+int cpcma_strong_pseudoprime_base(cpcma____uint64 x, cpcma____uint64 base)
+{
+	cpcma____uint64 exp = x - 1;
+	while(exp % 2 == 0)
+		exp >>= 1;
+	cpcma____uint64 m = cpcma_mod_pow64u(base, exp, x);
+	while(m != 1 && exp < x - 1)
+	{
+		m = cpcma_mod_pow64u(m, 2, x);
+		exp <<= 1;
+	}
+	if(m == 1)
+		return 0;
+	else
+		return 1;
+}
+
+/**
  * Faster algorithm for checking if a number is prime
  * Custom base for Fermat's little theorem
  * Works for numbers less than 10 to the 18
