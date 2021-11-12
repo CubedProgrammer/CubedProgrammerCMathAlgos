@@ -326,6 +326,64 @@ cpcma____uint64 cpcma_mod_pow64u(cpcma____uint64 base, cpcma____uint64 exp, cpcm
 }
 
 /**
+ * Cross product
+ */
+void cpcma_crossf(float x1, float y1, float z1, float x2, float y2, float z2, float *restrict x, float *restrict y, float *restrict z)
+{
+	*x = y1 * z2 - z1 * y2;
+	*y = z1 * x2 - x1 * z2;
+	*z = x1 * y2 - y1 * x2;
+}
+
+/**
+ * Cross product
+ */
+void cpcma_cross(double x1, double y1, double z1, double x2, double y2, double z2, double *restrict x, double *restrict y, double *restrict z)
+{
+	*x = y1 * z2 - z1 * y2;
+	*y = z1 * x2 - x1 * z2;
+	*z = x1 * y2 - y1 * x2;
+}
+
+/**
+ * Normalizes a vector, returns zero on success
+ */
+int cpcma_normalizef(float *restrict x, float *restrict y, float *restrict z)
+{
+	float len = sqrtf(*x * *x + *y * *y + *z * *z);
+	if(len == 0)
+		return-1;
+	else
+	{
+		// do one division instead of three
+		float div = 1.0 / len;
+		*x *= div;
+		*y *= div;
+		*z *= div;
+		return 0;
+	}
+}
+
+/**
+ * Normalizes a vector, returns zero on success
+ */
+int cpcma_normalize(double *restrict x, double *restrict y, double *restrict z)
+{
+	double len = sqrt(*x * *x + *y * *y + *z * *z);
+	if(len == 0)
+		return-1;
+	else
+	{
+		// do one division instead of three
+		double div = 1.0 / len;
+		*x *= div;
+		*y *= div;
+		*z *= div;
+		return 0;
+	}
+}
+
+/**
  * Faster algorithm for checking if a number is prime
  * Custom base for Fermat's little theorem
  * Works for numbers less than 10 to the 18

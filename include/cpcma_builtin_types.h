@@ -111,6 +111,42 @@ void cpcma_factor_uint64(cpcma____uint64 x, cpcma____uint64 *factorp[], size_t *
 cpcma____uint64 cpcma_get_fib(int x);
 
 /**
+ * Dot product
+ */
+static inline float cpcma_dotf(float x1, float y1, float z1, float x2, float y2, float z2)
+{
+	return x1 * x2 + y1 * y2 + z1 * z2;
+}
+
+/**
+ * Dot product
+ */
+static inline double cpcma_dot(double x1, double y1, double z1, double x2, double y2, double z2)
+{
+	return x1 * x2 + y1 * y2 + z1 * z2;
+}
+
+/**
+ * Cross product
+ */
+void cpcma_crossf(float x1, float y1, float z1, float x2, float y2, float z2, float *restrict x, float *restrict y, float *restrict z);
+
+/**
+ * Cross product
+ */
+void cpcma_cross(double x1, double y1, double z1, double x2, double y2, double z2, double *restrict x, double *restrict y, double *restrict z);
+
+/**
+ * Normalizes a vector, returns zero on success
+ */
+int cpcma_normalizef(float *restrict x, float *restrict y, float *restrict z);
+
+/**
+ * Normalizes a vector, returns zero on success
+ */
+int cpcma_normalize(double *restrict x, double *restrict y, double *restrict z);
+
+/**
  * Versin, which is 1-cos
  */
 static inline float cpcma_versinf(float f)
