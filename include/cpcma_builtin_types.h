@@ -147,6 +147,32 @@ int cpcma_normalizef(float *restrict x, float *restrict y, float *restrict z);
 int cpcma_normalize(double *restrict x, double *restrict y, double *restrict z);
 
 /**
+ * Rotate the vector (x, y) by an angle counterclockwise, in radians
+ */
+void cpcma_rotate_vectorf(float *restrict x, float *restrict y, float angle);
+
+/**
+ * Rotate the vector (x, y) by an angle counterclockwise, in radians
+ */
+void cpcma_rotate_vector(double *restrict x, double *restrict y, double angle);
+
+/**
+ * Log base b of p
+ */
+static inline float cpcma_logf(float b, float p)
+{
+	return logf(p) / logf(b);
+}
+
+/**
+ * Log base b of p
+ */
+static inline double cpcma_log(double b, double p)
+{
+	return log(p) / log(b);
+}
+
+/**
  * Versin, which is 1-cos
  */
 static inline float cpcma_versinf(float f)

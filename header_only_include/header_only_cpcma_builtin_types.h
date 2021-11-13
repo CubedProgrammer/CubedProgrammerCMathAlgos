@@ -384,6 +384,28 @@ int cpcma_normalize(double *restrict x, double *restrict y, double *restrict z)
 }
 
 /**
+ * Rotate the vector (x, y) by an angle counterclockwise, in radians
+ */
+void cpcma_rotate_vectorf(float *restrict x, float *restrict y, float angle)
+{
+	float re = cosf(angle), im = sinf(angle);
+	float nx = re * *x - im * *y, ny = re * *y + im * *x;
+	*x = nx;
+	*y = ny;
+}
+
+/**
+ * Rotate the vector (x, y) by an angle counterclockwise, in radians
+ */
+void cpcma_rotate_vector(double *restrict x, double *restrict y, double angle)
+{
+	double re = cos(angle), im = sin(angle);
+	double nx = re * *x - im * *y, ny = re * *y + im * *x;
+	*x = nx;
+	*y = ny;
+}
+
+/**
  * Probabilistic prime checking algorithm
  * Returns zero if x is strong-pseudoprime or prime
  * Works for numbers less than 10 to the 18
