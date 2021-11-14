@@ -13,6 +13,19 @@
 typedef long long unsigned cpcma____uint64;
 typedef long long cpcma____int64;
 
+// unions for converting float to int
+union cpcma_ftif
+{
+	float f;
+	int i;
+};
+
+union cpcma_fti
+{
+	double d;
+	cpcma____int64 i;
+};
+
 /**
  * Finds all primes up to a number
  * Specifically, sieves the array buf, so that only prime indices are non-zerp
@@ -150,10 +163,6 @@ int cpcma_normalize(double *restrict x, double *restrict y, double *restrict z);
  * Rotate the vector (x, y) by an angle counterclockwise, in radians
  */
 void cpcma_rotate_vectorf(float *restrict x, float *restrict y, float angle);
-
-/**
- * Rotate the vector (x, y) by an angle counterclockwise, in radians
- */
 void cpcma_rotate_vector(double *restrict x, double *restrict y, double angle);
 
 /**
@@ -164,9 +173,6 @@ static inline float cpcma_logf(float b, float p)
 	return logf(p) / logf(b);
 }
 
-/**
- * Log base b of p
- */
 static inline double cpcma_log(double b, double p)
 {
 	return log(p) / log(b);
@@ -200,6 +206,23 @@ static inline double cpcma_vercos(double d)
 {
 	double s = cos(d * 0.5);
 	return s * s * 2;
+}
+
+/**
+ * Get the bits of a float
+ */
+static inline int cpcma_get_bitsf(float f)
+{
+	union cpcma_ftif dummy;
+	dummy.f = f;
+	return dummy.i;
+}
+
+static inline cpcma____int64 cpcma_get_bits(double d)
+{
+	union cpcma_fti dummy;
+	dummy.d = d;
+	return dummy.i;
 }
 
 /**
