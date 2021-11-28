@@ -166,6 +166,18 @@ void cpcma_rotate_vectorf(float *restrict x, float *restrict y, float angle);
 void cpcma_rotate_vector(double *restrict x, double *restrict y, double angle);
 
 /**
+ * Quadratic formula, number of real roots is returned
+ */
+int cpcma_quadratic_formulaf(float a, float b, float c, float *restrict r1, float *restrict r2);
+int cpcma_quadratic_formula(double a, double b, double c, double *restrict r1, double *restrict r2);
+
+/**
+ * Evaluates a polynomial, coefficients assumed to be low-order to high-order
+ */
+float cpcma_eval_polyf(const float *coefs, int sz, float arg);
+double cpcma_eval_poly(const double *coefs, int sz, double arg);
+
+/**
  * Log base b of p
  */
 static inline float cpcma_logf(float b, float p)

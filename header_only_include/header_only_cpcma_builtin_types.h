@@ -406,6 +406,78 @@ void cpcma_rotate_vector(double *restrict x, double *restrict y, double angle)
 }
 
 /**
+ * Quadratic formula, number of real roots is returned
+ */
+int cpcma_quadratic_formulaf(float a, float b, float c, float *restrict r1, float *restrict r2)
+{
+	float crit = b * b - 4 * a * c;
+	int roots;
+	if(crit < 0)
+		roots = 0;
+	else if(crit == 0)
+	{
+		roots = 1;
+		*r1 = *r2 = -b / (2 * a);
+	}
+	else
+	{
+		roots = 2;
+		crit = sqrt(crit);
+		float div = 0.5 / a;
+		*r1 = (-b + crit) * div;
+		*r2 = (-b - crit) * div;
+	}
+	return roots;
+}
+
+int cpcma_quadratic_formula(double a, double b, double c, double *restrict r1, double *restrict r2)
+{
+	double crit = b * b - 4 * a * c;
+	int roots;
+	if(crit < 0)
+		roots = 0;
+	else if(crit == 0)
+	{
+		roots = 1;
+		*r1 = *r2 = -b / (2 * a);
+	}
+	else
+	{
+		roots = 2;
+		crit = sqrt(crit);
+		double div = 0.5 / a;
+		*r1 = (-b + crit) * div;
+		*r2 = (-b - crit) * div;
+	}
+	return roots;
+}
+
+/**
+ * Evaluates a polynomial, coefficients assumed to be low-order to high-order
+ */
+float cpcma_eval_polyf(const float *coefs, int sz, float arg)
+{
+	float res = 0;
+	for(int i = sz - 1; i >= 0; --i)
+	{
+		res *= arg;
+		res += coefs[i];
+	}
+	return res;
+}
+
+double cpcma_eval_poly(const double *coefs, int sz, double arg)
+{
+	double res = 0;
+	for(int i = sz - 1; i >= 0; --i)
+	{
+		res *= arg;
+		res += coefs[i];
+	}
+	return res;
+}
+
+/**
  * Probabilistic prime checking algorithm
  * Returns zero if x is strong-pseudoprime or prime
  * Works for numbers less than 10 to the 18
