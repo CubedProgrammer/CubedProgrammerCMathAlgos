@@ -406,6 +406,50 @@ void cpcma_rotate_vector(double *restrict x, double *restrict y, double angle)
 }
 
 /**
+ * Multiplies two matrices
+ * Returns zero is successful, nonzero if matrices cannot be multiplied
+ */
+int cpcma_matmulf(float *restrict dest, const float *restrict x, size_t w1, size_t h1, const float *restrict y, size_t w2, size_t h2)
+{
+	if(w1 == h2)
+	{
+		size_t rs = h1, cs = w2;
+		for(size_t i = 0; i < rs; ++i)
+		{
+			for(size_t j = 0; j < cs; ++j)
+			{
+				dest[i * cs + j] = 0;
+				for(size_t k = 0; k < h2; ++k)
+					dest[i * cs + j] += x[i * w1 + k] * y[k * w2 + j];
+			}
+		}
+		return 0;
+	}
+	else
+		return 13;
+}
+
+int cpcma_matmul(double *restrict dest, const double *restrict x, size_t w1, size_t h1, const double *restrict y, size_t w2, size_t h2)
+{
+	if(w1 == h2)
+	{
+		size_t rs = h1, cs = w2;
+		for(size_t i = 0; i < rs; ++i)
+		{
+			for(size_t j = 0; j < cs; ++j)
+			{
+				dest[i * cs + j] = 0;
+				for(size_t k = 0; k < h2; ++k)
+					dest[i * cs + j] += x[i * w1 + k] * y[k * w2 + j];
+			}
+		}
+		return 0;
+	}
+	else
+		return 13;
+}
+
+/**
  * Quadratic formula, number of real roots is returned
  */
 int cpcma_quadratic_formulaf(float a, float b, float c, float *restrict r1, float *restrict r2)

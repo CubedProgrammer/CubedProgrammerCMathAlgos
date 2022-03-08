@@ -178,6 +178,26 @@ float cpcma_eval_polyf(const float *coefs, int sz, float arg);
 double cpcma_eval_poly(const double *coefs, int sz, double arg);
 
 /**
+ * Adds two matrices
+ */
+static inline void cpcma_mataddf(float *restrict x, const float *restrict y, size_t area)
+{
+	for(float *it = x; it != x + area; *it++ += *y++);
+}
+
+static inline void cpcma_matadd(double *restrict x, const double *restrict y, size_t area)
+{
+	for(double *it = x; it != x + area; *it++ += *y++);
+}
+
+/**
+ * Multiplies two matrices
+ * Returns zero is successful, nonzero if matrices cannot be multiplied
+ */
+int cpcma_matmulf(float *restrict dest, const float *restrict x, size_t w1, size_t h1, const float *restrict y, size_t w2, size_t h2);
+int cpcma_matmul(double *restrict dest, const double *restrict x, size_t w1, size_t h1, const double *restrict y, size_t w2, size_t h2);
+
+/**
  * Log base b of p
  */
 static inline float cpcma_logf(float b, float p)
