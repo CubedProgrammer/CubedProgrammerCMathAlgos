@@ -70,6 +70,18 @@ double cpcma_inv_power_tower(double num)
 }
 
 /**
+ * Calculates the factorial of a number
+ * Numbers higher than 20 causes overflow
+ */
+cpcma____uint64 cpcma_fact(unsigned u)
+{
+	cpcma____uint64 prod = 1;
+	for(unsigned i = 1; i <= u; ++i)
+		prod *= i;
+	return prod;
+}
+
+/**
  * Correct modular arithmetic for ints
  */
 int cpcma_correct_mod(int x, int y)

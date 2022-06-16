@@ -48,6 +48,12 @@ static inline double cpcma_power_tower(double num)
 }
 
 /**
+ * Calculates the factorial of a number
+ * Numbers higher than 20 causes overflow
+ */
+cpcma____uint64 cpcma_fact(unsigned u);
+
+/**
  * Uses trial division with 6n+-1 optimization
  * Returns zero if prime and non-zero if not prime
  */
