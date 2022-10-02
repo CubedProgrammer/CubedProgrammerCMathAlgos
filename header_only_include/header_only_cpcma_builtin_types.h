@@ -614,6 +614,21 @@ cpcma____uint64 cpcma_get_fib(int x)
 }
 
 /**
+ * Computes x choose y
+ */
+cpcma____uint64 cpcma_choose(unsigned x, unsigned y)
+{
+	cpcma____uint64 z = 1;
+	for(unsigned i = 1; i <= y; ++i)
+	{
+		z *= x;
+		z /= i;
+		--x;
+	}
+	return z;
+}
+
+/**
  * Uses trial division with 6n+-1 optimization
  * Returns zero if prime and non-zero if not prime
  */

@@ -50,7 +50,7 @@ union cpcma_fti
 
 /**
  * Finds all primes up to a number
- * Specifically, sieves the array buf, so that only prime indices are non-zerp
+ * Specifically, sieves the array buf, so that only prime indices are non-zero
  */
 void cpcma_sieve_eratosthenes(size_t size,char buf[]);
 
@@ -150,6 +150,11 @@ void cpcma_factor_uint64(cpcma____uint64 x, cpcma____uint64 *factorp[], size_t *
  * Gets the xth fibonacci number
  */
 cpcma____uint64 cpcma_get_fib(int x);
+
+/**
+ * Computes x choose y
+ */
+cpcma____uint64 cpcma_choose(unsigned x, unsigned y);
 
 /**
  * Dot product
